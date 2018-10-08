@@ -1,0 +1,957 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>מטבע וירטואלי יהודי</title>
+    <meta name="description" content="פרויקט בלוקצ'יין - מור כהן">
+    <meta name="keywords" content="בלוקצ'יין, פרויקט, blockchain, virtual jewish coin, מטבע וירטואלי יהודי, מור כהן">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600|Montserrat:200,300,400" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/bootstrap/bootstrap.css">
+    
+
+
+
+
+    <link rel="stylesheet" href="./assets/fonts/fontawesome/css/font-awesome.min.css">
+
+
+    <link rel="stylesheet" href="./assets/css/slick.css">
+    <link rel="stylesheet" href="./assets/css/slick-theme.css">
+    <link rel="stylesheet" href="./assets/css/helpers.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/landing-2.css">
+</head>
+<body data-spy="scroll" data-target="#pb-navbar" data-offset="200" dir="rtl" ng-app="BlockExplorer">
+    <nav class="navbar navbar-expand-lg navbar-dark pb_navbar pb_scrolled-light" id="pb-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><img src="./assets/images/logo_blockchain.png"><img /></a>
+            <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse" data-target="#probootstrap-navbar" aria-controls="probootstrap-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span><i class="ion-navicon"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="probootstrap-navbar">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="#section-home">Block Explorer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#section-features">הארנק שלי</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#makeTransaction">בצע עסקה</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">על הפרוייקט</a></li>
+
+                    <li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" href="#register" target="_blank"><span class="pb_rounded-4 px-4">צרף חבר חדש</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END nav -->
+
+
+    <section class="pb_cover_v3 overflow-hidden cover-bg-indigo cover-bg-opacity text-right pb_gradient_v1 pb_slant-light" id="section-home">
+        <div class="container" ng-controller="MainController">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-6">
+                    <h2 class="heading">Block Explorer</h2>
+                    <h2 style="color: white;">חיפוש בבלוקצ'יין</h2>
+                    <div class="sub-heading">
+                        <p class="mb-4">Block Explorer - כמשתמע מהמילה עצמה זהו בעצם "חוקר בלוקים". מערכת בלוקצ'יין מורכבת מבלוקים, כך שבכל בלוק קיים תיעוד של כל העסקאות שבוצעו בבלוק. כאן נוכל לבצע חיפוש לפי "מזהה בלוק", "מפתח ציבורי של משתמש", "מזהה עסקה".</p>
+                        <p class="mb-5"><a class="btn btn-success btn-lg pb_btn-pill smoothscroll" href="#lastTransactions"><span class="pb_font-14 text-uppercase pb_letter-spacing-1"><span>ראה עסקאות אחרונות והתחל בתהליך הכריה!</span></span></a></p>
+
+                    </div>
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-5 relative align-self-center">
+                    <img id="bc_white_png" class="bc_white_png" src="assets/images/bc_white.png" alt="image error" />
+                    <form ng-submit="search(searchValue)" class="bg-white rounded pb_form_v1" style="position:relative">
+                        <div class="form-group">
+                            <input type="text" class="form-control pb_height-50 reverse" placeholder="הזן כאן כתובת מוצפנת" ng-model="searchValue">
+                        </div>
+                        <div class="form-group">
+                            <div class="pb_select-wrap">
+                                <select class="form-control pb_height-50 reverse" ng-model="searchType">
+                                    <option value="" selected>חיפוש לפי</option>
+                                    <option value="block">מזהה בלוק</option>
+                                    <option value="transaction">מזהה עסקה</option>
+                                    <option value="address">מפתח ציבורי - כל העסקאות שבוצעו ע"י משתמש זה</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="לחץ לחיפוש" data-toggle="modal" data-target="#BEModal">
+                        </div>
+                        <p ng-if="!block && !transaction && !addressData && initialSearchMade" class="no-data-text">
+                            לא נמצאו תוצאות.
+                        </p>
+                    </form>
+                    <!-- Modal -->
+                    <div class="modal fade" id="BEModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Block Explorer</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+
+
+                                    <div class="row">
+                                        <div class="col-md-10 offset-md-2">
+
+                                            <span ng-if="!block && !transaction && !addressData && initialSearchMade">
+                                                לא נמצאו תוצאות
+                                            </span>
+
+                                            <!-- 'display block' table -->
+                                            <h3 class="table-title" ng-if="block">חיפוש באמצעות מזהה בלוק</h3>
+                                            <table class="table table-striped" ng-if="block">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="bold">מזהה בלוק:</td>
+                                                        <td><small>{{ block.hash }}</small></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="bold">אינדקס:</td>
+                                                        <td>{{ block.index }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="bold">חותמת זמן:</td>
+                                                        <td>{{ block.timestamp }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="bold">תאריך ושעה:</td>
+                                                        <td><small>{{ block.date }}</small></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="bold">Nonce:</td>
+                                                        <td>{{ block.nonce }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="bold">מזהה בלוק קודם:</td>
+                                                        <td>{{ block.previousBlockHash }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="bold">מס' עסקאות:</td>
+                                                        <td>{{ block.transactions.length }} <a href="#" style="color:#6678ed">&nbsp; <small>הצג את כל העסקאות בבלוק</small></a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!-- end 'display block' table -->
+                                            <!-- 'display transaction' table -->
+                                            <h3 class="table-title" ng-if="transaction">חיפוש באמצעות מזהה/מס' עסקה</h3>
+                                            <table class="table table-striped" ng-if="transaction">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="bold">שולח:</td>
+                                                        <td>{{ transaction.sender }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="bold">נמען:</td>
+                                                        <td>{{ transaction.recipient }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="bold">כמות מטבעות:</td>
+                                                        <td>{{ transaction.amount }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!-- end 'display transaction' table -->
+                                            <!-- 'display address' table -->
+                                            <h3 class="table-title" ng-if="addressData">חיפוש באמצעות מפתח ציבורי</h3>
+                                            <p ng-if="addressData">מציג את כל העסקאות שבוצעו ע"י המשתמש: <small style="color: #1d82ff">{{searchValue}}</small></p>
+                                            <p id="balance-text" ng-if="addressData"><mark>מאזן נוכחי: {{ addressData.addressBalance }}JCN</mark></p>
+                                            <table class="table table-striped text-right" ng-if="addressData">
+                                                <thead class="text-right">
+                                                    <tr>
+                                                        <th scope="col" class="text-right">שולח:</th>
+                                                        <th scope="col" class="text-right">נמען:</th>
+                                                        <th scope="col" class="text-right">כמות מטבעות:</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="transaction in addressData.addressTransactions">
+                                                        <td>{{ transaction.sender }}</td>
+                                                        <td>{{ transaction.recipient }}</td>
+                                                        <td>{{ transaction.amount }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!-- end 'display address' table -->
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">סגור</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END section -->
+
+    <section class="pb_section bg-light pb_slant-white pb_pb-250" id="section-features">
+        <div class="container" ng-controller="MainController2">
+            <div class="row justify-content-center mb-2">
+                <div class="col-md-6 text-center mb-2">
+                    <h2>הארנק שלי</h2>
+                    <h5 class="text-uppercase pb_font-15 mb-2 pb_color-dark-opacity-3 pb_letter-spacing-2"><strong>ראה מידע עדכני אודות הארנק שלך</strong></h5>
+                </div>
+            </div>
+            <form ng-submit="search(searchValue)">
+                <div class="form-group">
+                    <input type="text" class="form-control pb_height-50" placeholder="הזן כאן את המפתח הציבורי שלך" ng-model="searchValue" ng-disabled="dis">
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-7"><input type="submit" id="myBtn" class="btn btn-secondary align-items-center " value="הצג מידע" data-toggle="collapse" data-target="#collapseWallet" aria-expanded="false" aria-controls="collapseWallet" ng-disabled="dis"></div>
+                        <div class="col-5">המפתח הציבורי הוא הקוד המוצפן <span style="font-weight: bold">השני</span> שניתן לך בעת הרשמתך לאתר</div>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div class="collapse" id="collapseWallet">
+                    <div class="row">
+                        <div class="col-6">
+                            <div ng-if="addressData" class="card card-body ">
+
+                                <h3 class="table-title" ng-if="addressData">פירוט עסקאות</h3>
+                                <p ng-if="addressData">מציג את כל העסקאות שבוצעו ע"י המשתמש: <small style="color: #1d82ff">{{searchValue}}</small></p>
+                                <p id="balance-text" ng-if="addressData"><mark>הסכום הנותר בעובר ושב: {{ addressData.addressBalance }} <small>JCN</small></mark></p>
+                                <table class="table table-striped text-right" ng-if="addressData" style="display: inline; overflow: auto">
+                                    <thead class="text-right">
+                                        <tr>
+                                            <th scope="col" class="text-right">שולח:</th>
+                                            <th scope="col" class="text-right">נמען:</th>
+                                            <th scope="col" class="text-right">סכום:</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="transaction in addressData.addressTransactions">
+                                            <td style="font-size:x-small; max-width: 220px;">{{ transaction.sender }}</td>
+                                            <td style="font-size:x-small; max-width: 220px;">{{ transaction.recipient }}</td>
+                                            <td>{{ transaction.amount }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            <div ng-if="addressData" class="card card-body ">
+
+                                <h3 class="table-title" ng-if="addressData">פירוט הוצאות אחרונות</h3>
+                                <p ng-if="addressData"><mark>גרף המפרט תשלומים שביצעת לאחרונה</mark></p>
+                                <p id="balance-text" ng-if="addressData">מסודר על פי תאריכים וסכומים שנשלחו בתאריכים אלה ע"י המשתמש: <small>{{searchValue}}</small></p>
+
+
+                                <canvas ng-if="addressData" id="myChart" width="100" height="50"></canvas>
+                                <script>
+
+                                    document.getElementById("myBtn").addEventListener("click", displayChart);
+
+                                    function displayChart() {
+                                        setTimeout(function () {
+
+                                            var dom_el = document.querySelector('[ng-controller="MainController2"]');
+                                            var ng_el = angular.element(dom_el);
+                                            var ng_el_scope = ng_el.scope();
+                                            var amounts = ng_el_scope.addressData;
+                                            var transactions = amounts.addressTransactions;
+                                            console.log(ng_el_scope.addressData.addressBalance);
+                                            console.log(transactions[0].date);
+
+
+
+                                            var ctx = document.getElementById("myChart").getContext('2d');
+                                            var myLineChart = new Chart(ctx, {
+                                                type: 'line',
+                                                data: {
+                                                    labels: [],
+                                                    datasets: [{
+                                                        label: 'יתרה בחשבון',
+                                                        data: [],
+                                                        borderWidth: 1
+                                                    }]
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                beginAtZero: true
+                                                            }
+                                                        }]
+                                                    }
+                                                }
+                                            });
+
+                                            for (var i = 0; i < transactions.length; i++) {
+                                                myLineChart.data.datasets[0].data.push(ng_el_scope.addressData.amountArr[i]);
+                                                myLineChart.data.labels.push(transactions[i].date);
+                                                myLineChart.update();
+                                            }
+                                            console.log(myLineChart);
+                                        }, 1000);
+                                    }
+
+                                </script>
+
+                                <a ng-if="addressData" href="#lastTransactions" class="text-left"><small>צפה בעסקאות אחרונות והתחל בתהליך כריה</small></a>
+
+                            </div>
+
+                        </div>
+
+                        <div ng-if="!block && !transaction && !addressData && initialSearchMade" class="no-data-text">
+
+
+                            <p><mark>לא נמצאו תוצאות עבור מפתח החיפוש הנ"ל: <small>{{searchValue}}</small></mark></p>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- END section -->
+
+
+
+
+    <section class="pb_section pb_slant-light" id="makeTransaction">
+        <div class="container" ng-controller="MainController3" ng-init="acceptedTransaction">
+            <div class="row">
+                <div class="col-lg-4 mb-5">
+                    <img src="./assets/images/Blockchain.png" alt="Image placeholder" class="img-fluid">
+                </div>
+                <div class="col-lg-8 pl-md-5 pl-sm-0">
+                    <div class="row">
+                        <div class="col">
+                            <h2>שלח JewCOIN's</h2>
+                            <p class="pb_font-20">בצע העברת מטבע וירטואלי (JCN) לחשבון אחר</p>
+                        </div>
+                    </div>
+
+                    <form name="sendCoins" novalidate>
+                        <div class="row">
+                            <div class="col-lg">
+
+                                <div class="media pb_feature-v2 text-right mb-1 mt-5">
+                                    <i class="fas fa-dollar-sign fa-1x"></i>
+                                    <div class="media-body">
+                                        <h3 class="mt-2 mb-2 heading">סכום לשליחה</h3>
+                                        <input type="text" name="amountToTransfer" class="form-control text-sans-serif" placeholder="לדוגמא: 50" ng-model="amountToTransfer" required>
+
+                                    </div>
+                                </div>
+
+                                <div class="media pb_feature-v2 text-right mb-1 mt-5">
+                                    <i class="fas fa-user-plus"></i>
+                                    <div class="media-body">
+                                        <h3 class="mt-2 mb-2 heading">השולח</h3>
+                                        <input type="text" class="form-control text-sans-serif" placeholder="הזן את המפתח הציבורי שלך" name="pubKey" ng-model="pubKey" required>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg">
+
+                                <div class="media pb_feature-v2 text-right mb-1 mt-5">
+                                    <i class="fas fa-key fa-1x"></i>
+                                    <div class="media-body">
+                                        <h3 class="mt-2 mb-2 heading">privateKey</h3>
+                                        <input type="text" class="form-control text-sans-serif" placeholder="הזן את המפתח הסודי שלך" name="privKey" ng-model="privKey" required>
+                                    </div>
+                                </div>
+                                <div class="media pb_feature-v2 text-right mb-1 mt-5">
+                                    <i class="fas fa-user-check"></i>
+                                    <div class="media-body">
+                                        <h3 class="mt-2 mb-2 heading">הנמען</h3>
+                                        <input type="text" class="form-control text-sans-serif" placeholder="הזן את המפתח הציבורי של הנמען" name="pubKeyOfRecipient" ng-model="pubKeyOfRecipient" required>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-7"></div>
+                                    <div class="col-5">
+                                        <div data-toggle="modal" data-target="#transactionModal">
+                                            <a class="tip"><input type="submit" class="btn btn-success pb_btn-pill" value="בצע העברה" ng-click="transactionCoins(amountToTransfer, privKey, pubKey, pubKeyOfRecipient)" ng-disabled="sendCoins.amountToTransfer.$invalid || sendCoins.pubKey.$invalid || sendCoins.pubKeyOfRecipient.$invalid || sendCoins.privKey.$invalid"><div style="color: white" ng-hide="sendCoins.amountToTransfer.$valid && sendCoins.pubKey.$valid && sendCoins.pubKeyOfRecipient.$valid && sendCoins.privKey.$valid"><small>הכפתור יהפוך לפעיל <span style="color: yellow">לאחר</span> השלמת הטופס</small></div></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <span class="text-sans-serif text-right" ng-show="sendCoins.amountToTransfer.$touched && sendCoins.amountToTransfer.$invalid || sendCoins.pubKey.$touched && sendCoins.pubKey.$invalid || sendCoins.pubKeyOfRecipient.$touched && sendCoins.pubKeyOfRecipient.$invalid || sendCoins.privKey.$touched && sendCoins.privKey.$invalid"><mark> על מנת לשלוח את הטופס - צריך להזין את כל השדות בטופס</mark></span><br />
+                        <span class="text-sans-serif text-right" ng-show="sendCoins.amountToTransfer.$touched && sendCoins.amountToTransfer.$invalid || sendCoins.pubKey.$touched && sendCoins.pubKey.$invalid || sendCoins.pubKeyOfRecipient.$touched && sendCoins.pubKeyOfRecipient.$invalid || sendCoins.privKey.$touched && sendCoins.privKey.$invalid"><small style="color: red; font-weight: bold; text-decoration: underline"> זוהו השגיאות הבאות:</small></span>
+                        <br />
+                        <span class="text-sans-serif text-right" ng-show="sendCoins.amountToTransfer.$touched && sendCoins.amountToTransfer.$invalid"><small>- חובה להזין סכום לשליחה</small></span>
+                        <br />
+                        <span class="text-sans-serif text-right" ng-show="sendCoins.pubKey.$touched && sendCoins.pubKey.$invalid"><small>- חובה להזין מפתח ציבורי של השולח</small></span>
+                        <br />
+                        <span class="text-sans-serif text-right" ng-show="sendCoins.pubKeyOfRecipient.$touched && sendCoins.pubKeyOfRecipient.$invalid"><small>- חובה להזין מפתח ציבורי של הנמען</small></span>
+                        <br />
+                        <span class="text-sans-serif text-right" ng-show="sendCoins.privKey.$touched && sendCoins.privKey.$invalid"><small>- חובה להזין מפתח אישי של השולח</small></span>
+
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="transactionModal" tabindex="-1" role="dialog" aria-labelledby="transactionModal" aria-hidden="true">
+
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">אישור עסקה</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="card card-body ">
+
+                                                <h3 class="table-title" ng-if="acceptedTransaction">העסקה בוצעה בהצלחה</h3>
+                                                <p ng-if="acceptedTransaction" style="color: red; font-weight: bold">הודעה חשובה: המטבעות יכנסו לארנק הדיגיטלי של הנמען רק לאחר ביצוע כריה של אחד המשתמשים ברשת</p>
+
+                                                <!-- 'display transaction' table -->
+                                                <h3 class="table-title" ng-if="acceptedTransaction">חשבונית:</h3>
+                                                <table class="table table-striped" ng-if="acceptedTransaction">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="bold">שולח:</td>
+                                                            <td>{{ pubKey }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="bold">נמען:</td>
+                                                            <td>{{ pubKeyOfRecipient }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="bold">כמות מטבעות:</td>
+                                                            <td>{{ amountToTransfer }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <!-- end 'display transaction' table -->
+                                                <a class="text-left" ng-if="acceptedTransaction"><mark>הורד חשבונית</mark></a>
+                                                <h3 class="table-title" ng-if="declineTransaction">העסקה נכשלה</h3>
+                                                <p ng-if="declineTransaction">מאחת הסיבות הבאות:</p>
+                                                <ul ng-if="declineTransaction">
+                                                    <li ng-if="declineTransaction">מפתח ציבורי של השולח/הנמען לא הוזן כראוי</li>
+                                                    <li ng-if="declineTransaction">מפתח פרטי של השולח אינו תואם למפתח הציבורי של השולח</li>
+                                                    <li ng-if="declineTransaction">יתרתך אינה מספיקה על מנת להעביר ת סכום המטבעות המבוקש</li>
+                                                    <li ng-if="declineTransaction">לא ניתן להעביר 0 מטבעות או פחות מזה</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">סגור</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END section -->
+
+
+    <section class="pb_section bg-light pb_slant-white" id="lastTransactions">
+        <div class="container" ng-controller="MainController6">
+            <div class="row justify-content-center mb-2">
+                <div class="col-md-6 text-center mb-2">
+                    <h2>עסקאות אחרונות שבוצעו</h2>
+                    <h5 class="text-uppercase pb_font-15 mb-2 pb_color-dark-opacity-3 pb_letter-spacing-2"><strong>כאן ניתן לראות עסקאות אחרונות שבוצעו <span style="font-weight: bold">הממתינות לכריה</span></strong></h5>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <table id="lastTransactionsTable" class="table table-hover table-bordered" style="overflow: auto">
+                    <thead class="text-right" style="background-image: -webkit-gradient(linear, left bottom, right top, from(#6777ed), to(#81cbec)); background-attachment:fixed; color: #fff">
+                        <tr class="text-right">
+                            <th class="text-right">מזהה עסקה</th>
+                            <th class="text-right">שולח</th>
+                            <th class="text-right">נמען</th>
+                            <th class="text-right">סכום</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background: #fff">
+                        <tr ng-repeat="tran in pendingTransactions">
+                            <td style="font-size:x-small; max-width: 100px;">{{ tran.transactionId }}</td>
+                            <td style="font-size:x-small; max-width: 220px;">{{ tran.sender }}</td>
+                            <td style="font-size:x-small; max-width: 220px;">{{ tran.recipient }}</td>
+                            <td>{{ tran.amount }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <script>
+                    $(document).ready(function(){
+                        $('[data-toggle="tooltip"]').tooltip();
+                    });
+            </script>
+            <div ng-controller="MainController7">
+                <div class="row">
+                    <p class="col-10"><small>*יש לרענן את הדף ולראות אם הטבלה התחדשה</small></p>
+                    <div class="col-2" data-toggle="tooltip" title="בלחיצה על כפתור זה תוכל לאפשר את כל העסקאות הממתינות לאישור">
+                        <button class="button1" style="vertical-align:middle" ng-click="mine()" ng-disabled="!pendingTransactions"><span>בצע כריה</span></button>
+                    </div>
+                </div>
+                <p class="alert alert-light no-data-text" style="outline: 2px dotted #639ce4" ng-if="mineSuccess">
+                    <span style="font-weight: bold;">הכריה התבצעה בהצלחה!</span> כעת העסקאות הושלמו והמטבעות התעדכנו בארנקים הדיגיטלים.
+                </p>
+            </div>
+        </div>
+
+    </section>
+    <!-- ENDs ection -->
+    <section class="pb_section pb_slant-white" id="about">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-6 text-center mb-5">
+                    <h2>על הפרויקט, עלי, ועל הבלוקצ'יין</h2>
+                    <h5 class="text-uppercase pb_font-15 mb-2 pb_color-dark-opacity-3 pb_letter-spacing-2"><strong>קצת עלי, הרבה על הפרויקט ועל הבלוקצ'יין</strong></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md">
+                    <div id="pb_faq" class="pb_accordion" data-children=".item">
+                        <div class="item">
+                            <a data-toggle="collapse" data-parent="#pb_faq" href="#pb_faq1" aria-expanded="false" aria-controls="pb_faq1" class="pb_font-22 py-4">&nbsp;&nbsp;&nbsp;מהו הבלוקצ'יין?</a>
+                            <div id="pb_faq1" class="collapse" role="tabpanel">
+                                <div class="py-3">
+                                    <p>
+                                        הרעיון המרכזי העומד מאחורי הטכנולוגיה הוא יצירת מערכת המאפשרת פעילות עסקית באינטרנט ללא צורך בפיקוח של ישות ניהול מרכזית. לדוגמה, העברת כספים בין עמית לעמית ללא צורך בפיקוח או ניהול של גורם חיצוני. עד היום הבנקים שימשו כמפקחים על כל ההעברות הכספיות והם אלה שערבו לערך של המטבעות והשטרות הפיזיים. בפלטפורמות P2P (עמית לעמית) אין גוף חיצוני המפקח על הפעילות העסקית והטכנולוגיה מחליפה את תפקידם של הבנקים.
+                                    </p>
+                                    <p>
+                                        זהו למעשה הבסיס שעומד מאחורי טכנולוגיית הבלוקצ'יין. באמצעות טכנולוגיה זו הרישום הדיגיטלי נשמר במחשבים של כל משתמשי הרשת ללא חשיפת זהותם. הרישום הדיגיטלי כולל מידע על חשבונות המשתמשים ורישום העברות כספים שבוצעו מהחשבונות, כאשר המידע נגיש, שקוף וזמין לכל משתמש אחר, תוך שמירה קפדנית על זהות המשתמשים ופרטיותם.
+                                    </p>
+                                    <p>
+                                        המידע מוצפן ברמה הגבוהה ביותר ומאוחסן בבלוק המצטרף לשרשרת הבלוקים הקיימת. כל בלוק קשור מתמטית לבלוק שלפניו כך שלא ניתן לשנות מידע קיים השמור בבלוקים. כך מקטינים את מעשי התרמית וממזערים משמעותית את הסיכון להונאות שונות. ראוי לציין כי כל בלוק ננעל בתוך פרק זמן נתון, כאשר בביטקוין הפעולה אורכת כעשר דקות. לאחר נעילת המידע וצירוף הבלוק לשרשרת הבלוקים, המערכת מייצרת חתימה דיגיטלית ייחודית שמקורה בבלוק הקודם. לכן, הטכנולוגיה נחשבת לבטוחה וכל משתמש המנסה לשנות פרט מסוים במידע השמור באחד הבלוקים הקודמים יקבל תוצאה אחרת והפעולה שלו תידחה.
+                                    </p>
+                                    <p>
+                                        חשוב להדגיש כי המידע על כל העסקאות נשמר באופן כרונולוגי בטכנולוגיית בלוקצ'יין. לאחר נעילת בלוק בצורה דיגיטלית הוא מצטרף לשרשרת הבלוקים, לכן המערכת נחשבת לבטוחה ואמינה, וכמעט בלתי אפשרי לזייף או לשנות מידע בבלוקים.
+                                    </p>
+                                    <p>
+                                        באמצעות הטכנולוגיה יש לכל המשתמשים גישה לנתונים, אך אין להם יכולת לשלוט במידע השמור. כך ניתן לוותר על פיקוח גורם שלישי על העברת מטבעות וירטואליים בין ארנקים דיגיטליים – חוסכים עמלות, מקצרים זמן ומייעלים את השיטה לטובת הכלל. זו בדיוק הסיבה מדוע בנקים וגופים פיננסים אחרים חוששים מהטכנולוגיה, ורק לאחרונה הם החלו לחקור כיצד מערכות בלוקצ'יין יכולות לסייע להם.
+                                    </p>
+                                    <p class="text-left">
+                                        <em>
+                                            נלקח מאתר Crypto Jungle, לקריאה נוספת:
+                                            <a href="https://www.cryptojungle.co.il/blog/134">לחץ כאן</a>
+                                        </em>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a data-toggle="collapse" data-parent="#pb_faq" href="#pb_faq2" aria-expanded="false" aria-controls="pb_faq2" class="pb_font-22 py-4">&nbsp;&nbsp;&nbsp;קצת עלי ועל הפרויקט</a>
+                            <div id="pb_faq2" class="collapse" role="tabpanel">
+                                <div class="py-3">
+                                    <p>מור כהן, 27, סטודנט להנדסת תוכנה.</p>
+                                    <p>לאחרונה נושא הבלוקצ'יין תפס תאוצה בצורה מדהימה. יותר ויותר הוא נכנס בנושאי שיחה על היתרונות שהוא נותן ועל חברות שהצליחו לקחת את זה צעד אחד קדימה.</p>
+                                    <p>כמובן שגם לאזני הגיעו השמועות וכבר הרבה מאוד זמן רציתי לחקור את הנושא ולדעת להתעסק בטכנולוגיה המדוברת. כמו כן, אני תמיד רוצה ומתלהב ללמוד דברים חדשים ולכן החלטתי לא לשחק במגרש הביתי שלי ולקחת את כישורי הJavascript שלי גם צעד אחד קדימה. </p>
+                                    <p>
+                                        כך התחלתי ללמוד איך nodeJS עובדת ובנוסף גם פריימוורקים כמו express וכלים חדשים כמו PostMan, chartJS, Angular ליצור Api's ועוד..
+                                        <br />
+                                        כך זה התקדם ותוך זמן קצר בניתי אבטיפוס למערכת הבלוקצ'יין בעזרת הכלים שרכשתי.
+                                    </p>
+                                    <p class="text-left">
+                                        <em>
+                                            תיק העבודות שלי:
+                                            <a href="http://morc.co.il/">לחץ כאן</a>
+                                        </em>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a data-toggle="collapse" data-parent="#pb_faq" href="#pb_faq3" aria-expanded="false" aria-controls="pb_faq3" class="pb_font-22 py-4">&nbsp;&nbsp;&nbsp;Blockchain - שרשרת בלוקים</a>
+                            <div id="pb_faq3" class="collapse" role="tabpanel">
+                                <div class="py-3">
+                                    <p>
+                                        הBlockchain כשמו כן הוא, "שרשרת בלוקים".
+                                        כל בלוק יכול להכיל כמות מסוימת של מידע, באופן כללי בלוק יכיל את המידע הבא:
+                                        <ul>
+                                            <li>
+                                                <mark>Block Index</mark>: מספר הבלוק הנוכחי.
+                                            </li>
+                                            <li>
+                                                <mark>Hash</mark>: תמצות (SHA-256) המידע שמרכיב את הבלוק כלומר כל העסקאות שמרכיבות את הבלוק תומצתו לפלט אחד, הפלט הנ"ל. שימו לב למספר האפסים בתחילת פלט התמצות-ככל שישנם יותר אפסים הקושי לפיצוח הבלוק(משמע עיבוד העסקאות) גדול יותר, קושי זה מתעדכן באופן אוטומטי בהתאם לסה"כ כוח החישוב ברשת המטבע בכל 2016 בלוקים (ברשת ביטקוין).
+                                            </li>
+                                            <li>
+                                                <mark>Previous block</mark>: תמצות (SHA-256) המידע של הבלוק הקודם. כל בלוק חייב להכיל את התמצות של הבלוק שנעשה לפניו. זו הדרך ליצור חותמת זמן ולשמור על סדר כרונולוגי שאינו ניתן לשינוי. הקשר הזה מכונה שרשרת הבלוקים.
+                                            </li>
+                                            <li>
+                                                <mark>Time</mark>: חותמת זמן יצירת הבלוק.
+                                            </li>
+                                            <li>
+                                                <mark>Transactions</mark>: כל העסקאות שמחכות להוכחת עבודה.
+                                            </li>
+                                            <li>
+                                                <mark>Total Coins</mark>: סה"כ כל המטבעות שהועברו בעסקאות המרכיבות את הבלוק.
+                                            </li>
+                                            <li>
+                                                <mark>Size</mark>: גודל/משקל הבלוק בקילובייטים.
+                                            </li>
+                                            <li>
+                                                <mark>Nonce</mark>: מספר ייחודי (32-bit) אותו יוצר הכורה בכדי לפצח את הבלוק. הפיצוח הוא למעשה יצירת תמצות המתחיל בהמון אפסים ותואם לתמצות הבלוק. מספר ה Nonce הנוכחי מייצג מספר לא ידוע של ניסיונות בכדי להגיע להתאמה הדרושה שהיא ה Nonce הנכון. כלומר, פיצוח הבלוק.
+                                            </li>
+                                            <li>
+                                                <mark>NetworkNodes</mark>: מפה הכוללת את שאר המחשבים ברשת.
+                                            </li>
+                                        </ul>
+                                    </p>
+                                    <p class="text-left">
+                                        <em>
+                                            לקריאה מעמיקה יותר:
+                                            <a href="https://dev.to/damcosset/blockchain-what-is-in-a-block-48jo">לחץ כאן</a>
+                                        </em>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a data-toggle="collapse" data-parent="#pb_faq" href="#pb_faq4" aria-expanded="false" aria-controls="pb_faq4" class="pb_font-22 py-4">&nbsp;&nbsp;&nbsp;מפתח פרטי ומפתח ציבורי - privateKey & publicKey</a>
+                            <div id="pb_faq4" class="collapse" role="tabpanel">
+                                <div class="py-3">
+                                    <p>
+                                        <mark>המפתח הפרטי</mark> הוא סוג של מחרוזת/מס' ייחודי שניתן למשתמש בעת רישומו לרשת הבלוקצ'יין.
+                                        <br />
+                                        ביחד עם זאת, קיים מפתח ציבורי בדומה למפתח הפרטי - מפתח זה נגזר מהמפתח הפרטי באמצעות פונקציית גיבוב כלשהי המשתמשת בפרוטוקול הצפנה כגון sha256/RSA.
+                                        <br />
+                                        מה שמיוחד במפתחות אלה הוא שניתן לפענח את המפתח הציבורי בעזרת המפתח הפרטי - אך כמעט בלתי אפשרי לפענח את המפתח הפרטי בעזרת המפתח הציבורי. כלומר התהליך הוא חד כיווני.
+
+                                    </p>
+                                    <p>
+                                        <mark>המפתח הציבורי</mark> הוא ה"מזהה" של המשתמש ברשת הבלוקצ'יין.
+                                        <br />
+                                        הוא גלוי לכל שאר המשתמשים ברשת, כך שכאשר משתמש מסוים ירצה לבצע העברה של מטבעות דיגיטלים לארנק הדיגיטלי שלכם הוא יצטרך לזהות אתכם באמצעותו.
+                                        <br />
+                                        <mark>מטרת המפתח הפרטי</mark> היא ביצוע פעולות בחשבון שלכם, כמו למשל העברת מטבעות דיגיטלים מהארנק הפרטי שלכם לארנק של משתמש אחר.
+                                        בשביל לבצע העברה שכזו המערכת תצטרך לבצע אימות ע"י כך שהשולח מזין למערכת את המפתח הפרטי והציבורי שלו, המערכת מבצעת פענוח באמצעות פונקצית ההצפנה, ולאחר שהיא רואה שהמפתח הציבורי אכן מתאים למפתח הפרטי - תתאפשר ההעברה בתנאי שיש לשולח מספיק מטבעות.
+                                    </p>
+                                    <p>
+                                        <h5 style="color: red">אזהרה - אין לשתף את המפתח הפרטי שלך עם אף אחד, מפתח זה הוא סודי!</h5>
+                                        <span style="color: red">במידה ומפתח זה יגיע לידיים הלא נכונות - אותו אדם יוכל לגנוב לך מטבעות וירטואלים!</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="register" class="pb_xl_py_cover overflow-hidden pb_slant-light pb_gradient_v1 cover-bg-opacity-8" style="background-image: url(./assets/images/1900x1200_img_5.jpg)">
+        <div class="container" ng-controller="MainController5">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-5 justify-content-center">
+                    <h2 class="heading mb-5 pb_font-40">הזמן חבר לרשת הjewCOIN</h2>
+                    <div class="sub-heading">
+                        <p class="mb-4">על מנת להרחיב את רשת jewCOIN אנו צריכים לצרף כמה שיותר חברים שישתמשו במטבעות הדיגיטלים. בשביל לחבר משתמש חדש אנא הזן כתובת ומס' פורט כמפורט בצד שמאל.</p>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+
+                <div class="col-md-5">
+                    <form class="bg-white rounded pb_form_v1">
+                        <h2 class="mb-4 mt-0 text-center">צרף חבר לרשת</h2>
+                        <p>נא לרשום מספר פורט. לדוגמא: <mark>3002</mark></p>
+                        <p>בגרסאת הדמו קיימים הפורטים: 3001,3002,3003,3004,3005</p>
+                        <div class="form-group">
+                            <input type="text" class="form-control py-3" placeholder="לדוגמא: 3002" ng-model="node">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="לחץ כדי לצרף" ng-click="registerToNetwork(node)">
+                        </div>
+                        <p ng-if="registerSuccess" class="no-data-text">חבר התווסף בהצלחה</p>
+                        <p ng-if="registerSuccess" class="no-data-text"><small style="color: red">*כעת גם החבר החדש יכול לראות את פעילות הבלוקצ'יין</small></p>
+                        <p ng-if="registerFailed" class="no-data-text">שגיאה בהוספת חבר</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END section -->
+
+
+    <section class="pb_section overflow-hidden pb_slant-light bg-light cover-bg-opacity-8" id="about">
+        <div class="container" ng-controller="MainController4">
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-6 text-center mb-5">
+                    <h2>מפתחות</h2>
+                    <h5 class="text-uppercase pb_font-15 mb-2 pb_color-dark-opacity-3 pb_letter-spacing-2"><strong>חלק זה זמין רק בגרסאת הדמו</strong></h5>
+
+                        <form class="bg-light mb-2">
+                            <div class="form-group">
+                                <input id="#private_key_is_valid" type="text" class="form-control py-3 reverse" placeholder="כאן יופיע נמפתח הפרטי שלך" value="{{private_key_is_valid}}" ng-disabled="true">
+                            </div>
+                            <div class="form-group">
+                                <input id="public_key_is_valid" type="text" class="form-control py-3 reverse" placeholder="כאן יופיע נמפתח הציבורי שלך" value="{{public_key_is_valid}}" ng-disabled="true">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="הראה לי את המפתחות" ng-click="showKeys()">
+                            </div>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="pb_footer bg-light" role="contentinfo">
+        <div class="container">
+
+            <div class="row">
+                <div class="col text-center">
+                    <div class="col">
+                        <ul class="list-inline" style="padding-left: 50px;">
+                            <li class="list-inline-item"><a href="#" class="p-2"><i class="fab fa-facebook-f"></i></a></li>
+                            <li class="list-inline-item"><a href="#" class="p-2"><i class="fab fa-github"></i></a></li>
+                            <li class="list-inline-item"><a href="#" class="p-2"><i class="fab fa-linkedin-in"></i></a></li>
+                        </ul>
+                    </div>
+                    <p class="pb_font-14">
+                        <a href="index.html">JewCOIN</a>
+                        <br>
+                        תוכנת ועוצב ע"י מור כהן - <a href="http://morc.co.il/">תיק עבודות</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- loader -->
+    <div id="pb_loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#1d82ff" /></svg></div>
+
+    <script src="./assets/js/jquery.min.js"></script>
+
+    <script src="./assets/js/popper.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/slick.min.js"></script>
+    <script src="./assets/js/jquery.mb.YTPlayer.min.js"></script>
+    <script src="./assets/js/jquery.waypoints.min.js"></script>
+    <script src="./assets/js/jquery.easing.1.3.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <script>
+        window.app = angular.module('BlockExplorer', []);
+        app.controller('MainController', function ($scope, $http) {
+
+            $scope.block = null;
+            $scope.transaction = null;
+            $scope.addressData = null;
+            $scope.initialSearchMade = false;
+
+            $scope.fetchBlock = function (blockHash) {
+                $http.get(`/block/${blockHash}`)
+                    .then(response => {
+                        $scope.block = response.data.block;
+                        $scope.transaction = null;
+                        $scope.addressData = null;
+                    });
+            };
+
+            $scope.fetchTransaction = function (transactionId) {
+                $http.get(`/transaction/${transactionId}`)
+                    .then(response => {
+                        $scope.transaction = response.data.transaction;
+                        $scope.block = null;
+                        $scope.addressData = null;
+                    });
+            };
+
+            $scope.fetchAddressData = function (address) {
+                $http.get(`/address/${address}`)
+                    .then(response => {
+                        $scope.addressData = response.data.addressData;
+                        if (!$scope.addressData.addressTransactions.length) $scope
+                            .addressData = null;
+                        $scope.block = null;
+                        $scope.transaction = null;
+                    });
+            };
+            $scope.search = function (searchValue) {
+                $scope.initialSearchMade = true;
+                if ($scope.searchType === 'block') {
+                    $scope.fetchBlock(searchValue);
+                }
+                else if ($scope.searchType === 'transaction') {
+                    $scope.fetchTransaction(searchValue);
+                }
+                else if ($scope.searchType === 'address') {
+                    $scope.fetchAddressData(searchValue);
+                }
+            };
+        });
+
+        ////////////////////////////////////////////////////////////////////
+        app.controller('MainController2', function ($scope, $http) {
+            $scope.addressData = null;
+            $scope.initialSearchMade = false;
+            $scope.dis = false;
+
+            $scope.fetchAddressData = function (address) {
+                $http.get(`/address/${address}`)
+                    .then(response => {
+                        $scope.addressData = response.data.addressData;
+                        if ($scope.addressData) {
+                            $scope.dis = !$scope.dis;//disable button
+                        }
+                        if (!$scope.addressData.addressTransactions.length) $scope
+                            .addressData = null;
+                        $scope.block = null;
+                        $scope.transaction = null;
+                    });
+            };
+            $scope.search = function (searchValue) {
+                $scope.initialSearchMade = true;
+                $scope.fetchAddressData(searchValue);
+            };
+
+
+        });
+
+        ///////////////////////////////////////////////////////////////////
+        app.controller('MainController3', function ($scope, $http) {
+
+            $scope.acceptedTransaction = null;
+            $scope.declineTransaction = null;
+
+            $scope.transactionCoins = function (amountToTransfer, privKey, pubKey, pubKeyOfRecipient) {
+
+                $http({
+                    url: '/transaction/broadcast',
+                    method: "POST",
+                    data: {
+                        "amount": amountToTransfer,
+                        "sender": pubKey,
+                        "recipient": pubKeyOfRecipient,
+                        "privKey": privKey
+                    }
+                })
+                    .then(function (response) {
+                        console.log("success");
+                        $scope.acceptedTransaction = true;
+                        $scope.declineTransaction = false;
+                        console.log(response.data.note);
+                        if (response.data.note === false) {
+                            $scope.acceptedTransaction = false;
+                            $scope.declineTransaction = true;
+                            console.log(response.data.note);
+                        }
+                        console.log($scope.acceptedTransaction);
+                    },
+                        function (response) {
+                            $scope.acceptedTransaction = false;
+                            $scope.declineTransaction = true;
+                            console.log("failed");
+                        });
+            }
+
+        });
+
+
+        ///////////////////////////////////////////////////////////////////
+        app.controller('MainController4', function ($scope, $http) {
+
+            $scope.private_key_is_valid = "כאן יוצג המפתח הפרטי שלך";
+            $scope.public_key_is_valid = "כאן יוצג המפתח הציבורי שלך";
+            $scope.showKeys = function () {
+                $http.get('/get_private&public_Key')
+                    .then(response => {
+                        $scope.private_key_is_valid = response.data.privateKey;
+                        $scope.public_key_is_valid = response.data.publicKey;
+                    });
+            }
+
+        });
+
+        ///////////////////////////////////////////////////////////////////
+        app.controller('MainController5', function ($scope, $http) {
+
+            $scope.registerSuccess = null;
+            $scope.registerFailed = null;
+            $scope.registerToNetwork = function (node) {
+                $http({
+                    url: '/register-and-broadcast-node',
+                    method: "POST",
+                    data: {
+                        "newNodeUrl": 'http://localhost:' + node
+                    }
+                })
+                    .then(function (response) {
+                        $scope.registerSuccess = true;
+
+                    },
+                        function (response) {
+                            $scope.registerFailed = true;
+                        });
+            }
+        });
+
+        ///////////////////////////////////////////////////////////////////
+        app.controller('MainController6', function ($scope, $http) {
+
+            $scope.pendingTransactions = null;
+
+            $scope.init = function () {
+                $http.get('/pendingTransactions')
+                    .then(response => {
+                        $scope.pendingTransactions = response.data.pendingTransactions;
+                    });
+            };
+
+            $scope.init();
+
+        });
+
+        ///////////////////////////////////////////////////////////////////
+        app.controller('MainController7', function ($scope, $http) {
+
+            $scope.mineSuccess = null;
+
+            $scope.mine = function () {
+                $http.get('/mine')
+                    .then(response => {
+                        $scope.mineSuccess = true;
+                    });
+            };
+
+        });
+
+    </script>
+
+    <script>
+/*
+                var dom_el = document.querySelector('[ng-controller="MainController4"]');
+                var ng_el = angular.element(dom_el);
+                var ng_el_scope = ng_el.scope();
+                var pubKey = ng_el_scope.public_key_is_valid;
+                */
+    </script>
+</body>
+</html>
